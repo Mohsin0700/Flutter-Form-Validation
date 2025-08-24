@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class MyTextformField extends StatefulWidget {
   final TextEditingController controller;
   final String hint;
+  final bool isPassword;
   const MyTextformField({
     super.key,
     required this.controller,
     required this.hint,
+    this.isPassword = false,
   });
 
   @override
@@ -31,12 +33,17 @@ class _MyTextformFieldState extends State<MyTextformField> {
         errorText = "Password must be at least 8 characters";
       });
       print(errorText);
+    } else {
+      setState(() {
+        errorText = null;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      obscureText: widget.isPassword,
       textInputAction: TextInputAction.next,
       controller: widget.controller,
       decoration: InputDecoration(
@@ -44,6 +51,16 @@ class _MyTextformFieldState extends State<MyTextformField> {
         border: OutlineInputBorder(),
         errorText: errorText,
       ),
+      onChanged: (value) {
+        if (widget.isPassword) {
+          passwordValidator(value);
+        }
+      },
+      onFieldSubmitted: (value) {
+        if (widget.isPassword) {
+          passwordValidator(value);
+        }
+      },
     );
   }
 }
